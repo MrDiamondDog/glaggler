@@ -18,6 +18,15 @@ export function reply(msg: Message, opts: CreateMessageOptions | string): Promis
     });
 }
 
+export function edit(message: string, channel: string, opts: CreateMessageOptions | string): Promise<Message> {
+    if (typeof opts === "string")
+        opts = {
+            content: opts
+        };
+
+    return Glaggler.rest.channels.editMessage(channel, message, opts);
+}
+
 export function send(channelID: string, opts: CreateMessageOptions | string): Promise<Message> {
     if (typeof opts === "string")
         opts = {
@@ -27,29 +36,32 @@ export function send(channelID: string, opts: CreateMessageOptions | string): Pr
     return Glaggler.rest.channels.createMessage(channelID, opts);
 }
 
-export async function upload(channelID: string, data: string, filename: string) {
+export async function upload(channelID: string, data: string | Buffer, message?: CreateMessageOptions, method: "POST" | "PATCH" = "POST", messageId?: string): Promise<Message> {
     const body = new FormData();
     body.append("payload_json", JSON.stringify({
         attachments: [{
-            filename,
+            filename: "upload.png",
             id: 0
-        }]
+        }],
+        ...message
     }));
     const blob = new Blob([data], { type: "text/plain" });
-    body.append("files[0]", blob, filename);
+    body.append("files[0]", blob, "upload.png");
 
     // manually send fetch request to upload file
-    return await fetch(`https://discord.com/api/v9/channels/${channelID}/messages`, {
-        method: "POST",
+    return await fetch(`https://discord.com/api/v9/channels/${channelID}/messages${method === "PATCH" ? `/${messageId}` : ""}`, {
+        method: method,
         headers: {
-            Authorization: "Bot " + process.env.TOKEN,
+            Authorization: "Bot " + process.env.DISCORD_TOKEN,
         },
         body
     }).then(async res => {
         if (!res.ok) {
             throw new Error(`Failed to upload file: ${res.status} ${res.statusText} ${JSON.stringify(await res.json())}`);
         }
-    });
+
+        return res.json();
+    }) as Message;
 }
 
 export const ZWSP = "\u200B";
