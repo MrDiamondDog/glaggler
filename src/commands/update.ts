@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import fs from "fs";
 
 import { defineCommand } from "../command";
 import { codeblock, reply } from "../utils";
@@ -20,6 +21,8 @@ defineCommand({
             await reply(msg, {
                 content: "Updated!! Now restarting..."
             });
+
+            fs.writeFileSync("./data/assets/restart-notif-channel", msg.channelID);
 
             process.exit(0);
         } catch (e) {

@@ -1,3 +1,4 @@
+import fs from "fs";
 import { ActivityTypes, AnyTextableChannel, Client, Message } from "oceanic.js";
 
 import { Commands } from "./command";
@@ -28,6 +29,12 @@ Glaggler.once("ready", async () => {
             type: ActivityTypes.CUSTOM
         }
     ]);
+
+    if (fs.existsSync("./data/assets/restart-notif-channel")) {
+        const channelID = fs.readFileSync("./data/assets/restart-notif-channel", "utf8");
+        fs.rmSync("./data/assets/restart-notif-channel");
+        send(channelID, "im back :3");
+    }
 });
 
 Glaggler.on("messageCreate", async message => {
