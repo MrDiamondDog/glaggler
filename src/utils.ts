@@ -1,4 +1,4 @@
-import { CreateMessageOptions, Message } from "oceanic.js";
+import { CreateMessageOptions, Message, NullablePartialEmoji } from "oceanic.js";
 
 import { Glaggler } from "./client";
 
@@ -65,6 +65,7 @@ export async function upload(channelID: string, data: string | Buffer, message?:
 }
 
 export const ZWSP = "\u200B";
+export const EMPTY = "\u2800";
 export const codeblock = (s: string, lang = "") => `\`\`\`${lang}\n${s.replaceAll?.("`", "`" + ZWSP) || s || "No output"}\n\`\`\``;
 
 export function pluralise(amount: number, singular: string, plural = singular + "s") {
@@ -97,4 +98,23 @@ export function snakeToTitle(s: string) {
 
 export function toInlineCode(s: string) {
     return "``" + ZWSP + s.replaceAll("`", ZWSP + "`" + ZWSP) + ZWSP + "``";
+}
+
+export function sleep(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export function emoji(emoji: NullablePartialEmoji) {
+    return emoji.id ? `<:${emoji.name}:${emoji.id}>` : emoji.name;
+}
+
+export function seededRandom(seed: number) {
+    const m = 0x80000000; // 2^31
+    const a = 1103515245;
+    const c = 12345;
+
+    let state = seed || Math.floor(Math.random() * (m - 1));
+
+    state = (a * state + c) % m;
+    return state / (m - 1);
 }

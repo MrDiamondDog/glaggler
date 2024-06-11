@@ -5,6 +5,7 @@
 		"build": "node build.mjs"
 	},
 	"dependencies": {
+		"canvas": "^2.11.2",
 		"dotenv": "^16.4.5",
 		"g4f": "^1.4.3",
 		"oceanic.js": "^1.10.4",

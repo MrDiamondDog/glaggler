@@ -1,12 +1,12 @@
 import { Glaggler, PREFIX } from "../client";
 import { defineCommand } from "../command";
-import { cacheMessages, generalChannel, getMessages, josh } from "../modules/josh";
+import { cacheMessages, currentConvo, generalChannel, getMessages, josh, setCurrentConvo } from "../modules/josh";
 import { edit, reply } from "../utils";
 
 defineCommand({
     name: "josh",
     description: "Uses the Markov chain to generate a sentence",
-    usage: "josh [index|prompt]",
+    usage: "josh [index]",
 
     async execute(msg, ...args) {
         if (msg.channel!.id !== generalChannel) {
@@ -29,6 +29,21 @@ defineCommand({
             cacheMessages(messages.map(m => m.content));
 
             return;
+        }
+
+        if (args?.[0] === "convo") {
+            setCurrentConvo(msg.author.id);
+
+            return reply(msg, "conversation started with " + msg.author.mention);
+        }
+
+        if (args?.[0] === "stop") {
+            if (!currentConvo) return;
+            if (currentConvo !== msg.author.id) return;
+
+            setCurrentConvo(null);
+
+            return reply(msg, "conversation stopped");
         }
 
         const messages = getMessages();

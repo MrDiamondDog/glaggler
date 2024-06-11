@@ -4,6 +4,11 @@ import { Glaggler, PREFIX } from "../client";
 
 export const generalChannel = "1094818966830055458";
 
+export let currentConvo: string | null = null;
+export function setCurrentConvo(user: string | null) {
+    currentConvo = user;
+}
+
 export function cacheMessages(messages: string[]) {
     if (!fs.existsSync("messages.json"))
         fs.writeFileSync("messages.json", "[]");
@@ -19,6 +24,11 @@ Glaggler.on("messageCreate", async msg => {
     if (msg.channel?.id !== generalChannel || msg.author.id === Glaggler.user.id) return;
     if (msg.content.startsWith(PREFIX)) return;
 
+    if (currentConvo && msg.author.id === currentConvo) {
+        msg.channel?.createMessage({ content: josh(getMessages()) });
+        return;
+    }
+
     const messages = getMessages();
 
     messages.push(msg.content);
@@ -30,7 +40,6 @@ export function josh(messages: string[]) {
     const transitions = {};
     const startStates: string[] = [];
 
-    // Helper function to tokenize and process the input text
     function addToChain(text: string) {
         const words = text.toLowerCase().split(" ");
         if (!words) return;
@@ -48,10 +57,8 @@ export function josh(messages: string[]) {
         }
     }
 
-    // Process each input string
     messages.forEach(addToChain);
 
-    // Helper function to generate a sentence
     function generateSentence() {
         let currentWord = startStates[Math.floor(Math.random() * startStates.length)];
         const sentence = [currentWord];

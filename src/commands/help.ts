@@ -6,7 +6,13 @@ defineCommand({
     name: "help",
     aliases: ["h", "?"],
     description: "List all commands",
-    execute(msg) {
+    usage: "help [command]",
+
+    execute(msg, ...args) {
+        if (args.length) {
+            return reply(msg, { content: commandHelp(args[0]) });
+        }
+
         return reply(msg, { content: commandList() });
     },
 });
@@ -23,4 +29,14 @@ function commandList() {
     }).join("\n");
 
     return commandDescriptions + `\n\nUse \`${PREFIX}help <command>\` for more information on a specific command!`;
+}
+
+function commandHelp(commandName: string) {
+    const command = Commands[commandName];
+    if (!command)
+        return `Command \`${commandName}\` not found`;
+
+    const usage = command.usage ? `\n\`${command.usage}\`` : "";
+    const aliases = command.aliases ? `\nAliases: \`${command.aliases.join("`, `")}\`` : "";
+    return `**${PREFIX}${command.name}**${aliases}${usage}\n${command.description}`;
 }

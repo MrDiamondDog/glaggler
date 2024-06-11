@@ -7,6 +7,8 @@ defineCommand({
     name: "exec",
     description: "run js code (please dont fuck up my computer)",
 
+    usage: "exec <js codeblock>",
+
     async execute(msg, ...args) {
         if (msg.author.id !== "523338295644782592")
             return reply(msg, "https://http.cat/403.jpg");

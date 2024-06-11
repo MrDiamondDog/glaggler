@@ -5,7 +5,7 @@ import { reply } from "../utils";
 defineCommand({
     name: "type",
     description: "Type something into the browser (;browser)",
-    usage: "type [text]",
+    usage: "type <text>",
 
     async execute(msg, ...args) {
         if (!activePage)
