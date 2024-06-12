@@ -41,9 +41,7 @@ defineCommand({
             if (guess.length !== game.word.length)
                 return reply(msg, "wrong length");
 
-            const validWords = words.filter(w => w.length === wordLength);
-
-            if (!validWords.includes(guess))
+            if (!words.includes(guess))
                 return reply(msg, "word not found");
 
             let out = "";
