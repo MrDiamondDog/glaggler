@@ -1,11 +1,11 @@
-
 import { TextChannel } from "oceanic.js";
 
 import { drawChannelRedirectImage } from "../channelRedirect";
 import { defineCommand } from "../command";
-import { fishData, fishes, sellFish, startFish } from "../modules/fish";
+import { fishingPage, sellFishPage } from "../modules/fish";
+import { fishData } from "../modules/fish/data";
+import { coins, fishes } from "../modules/fish/fishes";
 import { emoji, reply } from "../utils";
-import { coins } from "./../modules/fish";
 
 defineCommand({
     name: "fish",
@@ -13,7 +13,7 @@ defineCommand({
     usage: "fish [collections|leaderboard|sell]",
 
     async execute(msg, ...args) {
-        if (!(msg.channel as TextChannel).name.startsWith("fish-"))
+        if (!(msg.channel as TextChannel).name.startsWith("fish-") && msg.channelID !== "1058495236453711936")
             return msg.channel!.createMessage({
                 files: [
                     {
@@ -54,7 +54,7 @@ defineCommand({
 
         if (args?.[0] === "leaderboard") {
             const leaderboard = Object.entries(fishData)
-                .sort((a, b) => a[1].coins - b[1].coins)
+                .sort((a, b) => b[1].coins - a[1].coins)
                 .map((v, i) => `${i + 1}. <@${v[0]}>: ${coins(v[1].coins)}`)
                 .join("\n");
 
@@ -63,10 +63,10 @@ defineCommand({
 
         if (args?.[0] === "sell") {
             const message = await reply(msg, "loading...");
-            return sellFish(message, msg.author.id);
+            return sellFishPage(message, msg.author.id);
         }
 
         const fishMsg = await reply(msg, "waiting for fish :3");
-        startFish(fishMsg, msg.author.id);
+        fishingPage(fishMsg, msg.author.id);
     },
 });
