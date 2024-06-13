@@ -28,18 +28,26 @@ export const fishCoins: Record<number, NullablePartialEmoji> = {
         name: "50_fish_bucks",
         id: "1249546401709559900"
     },
+    999999999: {
+        name: "many_fish_bucks",
+        id: "1250924669385572392"
+    },
 };
 
-export function coins(amount: number, truncate?: boolean): string {
-    if (truncate) return `$${amount}`;
-
+export function coins(amount: number): string {
     const originalAmount = amount;
     let out = "";
+    let emojis = 0;
     for (const denom of Object.keys(fishCoins).reverse().map(str => parseInt(str))) {
         const denomAmount = Math.floor(amount / denom);
         amount -= denomAmount * denom;
         out += emoji(fishCoins[denom])?.repeat(denomAmount);
+        emojis += denomAmount;
     }
+
+    if (emojis >= 10)
+        return `${emoji(fishCoins[999999999])} ($${originalAmount})`;
+
     out += ` ($${originalAmount})`;
     return out;
 }

@@ -34,17 +34,12 @@ export function sellFishPage(msg: Message, user: string) {
             components: [fishAgainButton(user)]
         });
 
-    let allFish = inventory.map(fish => `${fish.emoji || emoji(fish.customEmoji!)} - ${coins(fish.baseValue)}`).join("\n");
-    if (allFish.length > 1900) {
-        allFish = inventory.map(fish => `${fish.emoji || emoji(fish.customEmoji!)} - ${coins(fish.baseValue, true)}`).join("\n");
-        if (allFish.length > 1900)
-            allFish = inventory.slice(0, 10).map(fish => `${fish.emoji || emoji(fish.customEmoji!)} - ${coins(fish.baseValue, true)}`).join("\n") + "\n...";
-    }
+    const allFish = inventory.map(fish => `${fish.emoji || emoji(fish.customEmoji!)} - ${coins(fish.baseValue)}`).join("\n");
     const totalValue = inventory.reduce((acc, fish) => acc + fish.baseValue, 0);
 
     let out = `${allFish}\n------------------\nTotal: ${coins(totalValue)}`;
 
-    if (out.length > 1900) out = `${allFish}\n------------------\nTotal: ${coins(totalValue, true)}`;
+    if (out.length > 1900) out = `${allFish}\n------------------\nTotal: ${coins(totalValue)}`;
 
     return edit(msg.id, msg.channelID, {
         content: out,
@@ -132,7 +127,7 @@ Glaggler.on("interactionCreate", async interaction => {
         fishData[user].inventory = [];
         saveFishData();
         let out = `sold all fish for ${coins(total)}\nyou now have ${coins(fishData[user].coins)}`;
-        if (out.length > 1900) out = `sold all fish for ${coins(total, true)}\nyou now have ${coins(fishData[user].coins, true)}`;
+        if (out.length > 1900) out = `sold all fish for ${coins(total)}\nyou now have ${coins(fishData[user].coins)}`;
         return button.editParent({
             content: out,
             components: [fishAgainButton(user, "Go fishing")]
