@@ -53,10 +53,17 @@ defineCommand({
         }
 
         if (args?.[0] === "leaderboard") {
-            const leaderboard = Object.entries(fishData)
+            let leaderboard = Object.entries(fishData)
                 .sort((a, b) => b[1].coins - a[1].coins)
                 .map((v, i) => `${i + 1}. <@${v[0]}>: ${coins(v[1].coins)}`)
                 .join("\n");
+
+            if (leaderboard.length >= 1900)
+                leaderboard = Object.entries(fishData)
+                    .sort((a, b) => b[1].coins - a[1].coins)
+                    .slice(0, 10)
+                    .map((v, i) => `${i + 1}. <@${v[0]}>: ${coins(v[1].coins, true)}`)
+                    .join("\n") + "\n...";
 
             return reply(msg, leaderboard);
         }
