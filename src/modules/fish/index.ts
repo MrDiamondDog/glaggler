@@ -2,12 +2,13 @@ import fs from "fs";
 import { ComponentInteraction, MessageFlags } from "oceanic.js";
 
 import { Glaggler } from "../../client";
-import { emoji } from "../../utils";
+import { emoji, stripIndent } from "../../utils";
 import { row } from "../../utils/components";
 import { sellFishButton,startFishButton } from "./buttons";
-import { addFish, fishData, sellAll } from "./data";
+import { addFish, fishData, requiredXpForNextLevel, sellAll, xpBar } from "./data";
 import { coins } from "./fishes";
 import { fishingPage, sellFishPage } from "./pages";
+import { rarityData } from "./types";
 
 
 if (fs.existsSync("fishData.json")) {
@@ -75,10 +76,13 @@ Glaggler.on("interactionCreate", async int => {
     if (!catching) return;
 
     if (index.endsWith("!")) {
-        addFish(userId, catching);
+        const addedFishData = addFish(userId, catching);
         userData.state = "idle";
         return interaction.editParent({
-            content: `you got a **${catching.name}** ${catching.emoji || emoji(catching.customEmoji!)}!`,
+            content: stripIndent`
+            you caught a ${catching.emoji || emoji(catching.customEmoji!)} **${catching.name}** ${emoji(rarityData[addedFishData.fish.rarity].emoji)}!
+            $${addedFishData.fish.value}, +${addedFishData.xp} XP
+            ${xpBar(userData.xp, requiredXpForNextLevel(userData.level))} ${userData.xp}/${requiredXpForNextLevel(userData.level)} XP`,
             components: [row(startFishButton(userId, "Fish Again")), row(sellFishButton(userId))]
         });
     } else {

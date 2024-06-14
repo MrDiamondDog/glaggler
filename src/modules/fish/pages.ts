@@ -4,7 +4,8 @@ import { edit, emoji, sleep } from "../../utils";
 import { button, row } from "../../utils/components";
 import { catchFishButtonRows, sellFishButton, startFishButton } from "./buttons";
 import { fishData } from "./data";
-import { coins, randomFish } from "./fishes";
+import { coins, getFish, randomFish } from "./fishes";
+import { rarityData } from "./types";
 
 export function sellFishPage(interaction: ComponentInteraction) {
     const { message, user: { id: userId } } = interaction;
@@ -18,8 +19,12 @@ export function sellFishPage(interaction: ComponentInteraction) {
             components: [row(startFishButton(userId))]
         });
 
-    const allFish = inventory.map(fish => `${fish.emoji || emoji(fish.customEmoji!)} - ${coins(fish.baseValue)}`).join("\n");
-    const totalValue = inventory.reduce((acc, fish) => acc + fish.baseValue, 0);
+    const allFish = inventory.map(f => {
+        const fish = getFish(f.name)!;
+        return `${fish.emoji || emoji(fish.customEmoji!)} ${emoji(rarityData[f.rarity].emoji)} - ${coins(fish.baseValue)}`;
+    }).join("\n");
+
+    const totalValue = inventory.reduce((acc, fish) => acc + fish.value, 0);
 
     const out = `${allFish}\n------------------\nTotal: ${coins(totalValue)}`;
 

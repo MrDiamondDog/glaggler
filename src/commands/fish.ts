@@ -15,7 +15,7 @@ defineCommand({
         const userData = fishData[userId];
 
         if (!userData)
-            fishData[userId] = { state: "idle", inventory: [], coins: 0, inventorySlots: 10 };
+            fishData[userId] = { state: "idle", inventory: [], coins: 0, inventorySlots: 10, level: 0, xp: 0 };
 
         reply(msg, {
             content: "fishing :3",
