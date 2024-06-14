@@ -36,6 +36,10 @@ export function send(channelID: string, opts: CreateMessageOptions | string): Pr
     return Glaggler.rest.channels.createMessage(channelID, opts);
 }
 
+export async function deleteMsg(messageId: string, channelId: string) {
+    return Glaggler.rest.channels.deleteMessage(channelId, messageId);
+}
+
 export async function upload(channelID: string, data: string | Buffer, message?: CreateMessageOptions, method: "POST" | "PATCH" = "POST", messageId?: string): Promise<Message> {
     const body = new FormData();
     body.append("payload_json", JSON.stringify({

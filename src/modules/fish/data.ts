@@ -10,6 +10,17 @@ export function addFish(user: string, fish: Fish) {
     saveFishData();
 }
 
+export function sellAll(user: string): number {
+    const total = fishData[user].inventory.reduce((acc, fish) => acc + fish.baseValue, 0);
+
+    fishData[user].coins += total;
+    fishData[user].inventory = [];
+
+    saveFishData();
+
+    return total;
+}
+
 export function saveFishData() {
     const saveData: Record<string, any> = {};
 
