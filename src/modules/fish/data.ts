@@ -50,16 +50,16 @@ export function getXpForFish(fish: InventoryFish): number {
 
 const xpBarEmojis = {
     left: {
-        full: "<:bar_left_full:1251252099543466155>",
-        empty: "<:bar_left_empty:1251252098620723303>"
+        full: "<:bar_left_full:1251265391011823777>",
+        empty: "<:bar_left_empty:1251265389946736731>"
     },
     middle: {
-        full: "<:bar_middle_full:1251252102114840576>",
-        empty: "<:bar_middle_empty:1251252100625727599>"
+        full: "<:bar_middle_full:1251266233483923609>",
+        empty: "<:bar_middle_empty:1251265393016705096>"
     },
     right: {
-        full: "<:bar_right_full:1251252104232828978>",
-        empty: "<:bar_right_empty:1251252103008096369>"
+        full: "<:bar_right_full:1251265397051756584>",
+        empty: "<:bar_right_empty:1251265395923619970>"
     }
 };
 

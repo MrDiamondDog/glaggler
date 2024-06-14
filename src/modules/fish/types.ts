@@ -38,7 +38,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
     common: {
         multiplier: 1.0,
         requiredLevel: 0,
-        percentChance: 40,
+        percentChance: 100,
         emoji: {
             name: "common_star",
             id: "1251245212517400667"
@@ -47,7 +47,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
     uncommon: {
         multiplier: 1.25,
         requiredLevel: 2,
-        percentChance: 25,
+        percentChance: 50,
         emoji: {
             name: "uncommon_star",
             id: "1251245218494283927"
@@ -56,7 +56,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
     rare: {
         multiplier: 1.5,
         requiredLevel: 4,
-        percentChance: 20,
+        percentChance: 25,
         emoji: {
             name: "rare_star",
             id: "1251245217378730035"
@@ -65,7 +65,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
     epic: {
         multiplier: 1.75,
         requiredLevel: 8,
-        percentChance: 10,
+        percentChance: 15,
         emoji: {
             name: "epic_star",
             id: "1251245213083762741"
@@ -74,7 +74,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
     legendary: {
         multiplier: 2,
         requiredLevel: 12,
-        percentChance: 5,
+        percentChance: 7,
         emoji: {
             name: "legendary_star",
             id: "1251245214471815169"
@@ -83,7 +83,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
     mythic: {
         multiplier: 2.5,
         requiredLevel: 15,
-        percentChance: 2,
+        percentChance: 3,
         emoji: {
             name: "mythic_star",
             id: "1251245216133021748"
