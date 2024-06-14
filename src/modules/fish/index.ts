@@ -82,7 +82,7 @@ Glaggler.on("interactionCreate", async int => {
             content: stripIndent`
             you caught a ${catching.emoji || emoji(catching.customEmoji!)} **${catching.name}** ${emoji(rarityData[addedFishData.fish.rarity].emoji)}!
             $${addedFishData.fish.value}, +${addedFishData.xp} XP
-            ${xpBar(userData.xp, requiredXpForNextLevel(userData.level))} ${userData.xp}/${requiredXpForNextLevel(userData.level)} XP`,
+            Level ${userData.level} ${xpBar(userData.xp, requiredXpForNextLevel(userData.level))} ${userData.xp}/${requiredXpForNextLevel(userData.level)} XP`,
             components: [row(startFishButton(userId, "Fish Again")), row(sellFishButton(userId))]
         });
     } else {

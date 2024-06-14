@@ -31,7 +31,7 @@ export function addXp(user: string, xp: number) {
     userData.xp += xp;
 
     if (requiredXpForNextLevel(userData.level) < userData.xp) {
-        userData.xp = 0;
+        userData.xp -= requiredXpForNextLevel(userData.level);
         userData.level++;
     }
 }
