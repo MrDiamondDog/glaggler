@@ -18,11 +18,22 @@ export function addFish(user: string, fish: Fish): { fish: InventoryFish; xp: nu
     userData.inventory.push(inventoryFish);
 
     const xp = getXpForFish(inventoryFish);
-    userData.xp += xp;
+    addXp(user, xp);
 
     saveFishData();
 
     return { fish: inventoryFish, xp };
+}
+
+export function addXp(user: string, xp: number) {
+    const userData = fishData[user];
+
+    userData.xp += xp;
+
+    if (requiredXpForNextLevel(userData.level) < userData.xp) {
+        userData.xp = 0;
+        userData.level++;
+    }
 }
 
 export function getXpForFish(fish: InventoryFish): number {
