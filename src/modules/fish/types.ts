@@ -38,32 +38,32 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
     common: {
         multiplier: 1.0,
         requiredLevel: 0,
-        percentChance: 38,
+        percentChance: 40,
         emoji: {
             name: "common_star",
             id: "1251245212517400667"
         }
     },
     uncommon: {
-        multiplier: 1.1,
+        multiplier: 1.25,
         requiredLevel: 2,
-        percentChance: 30,
+        percentChance: 25,
         emoji: {
             name: "uncommon_star",
             id: "1251245218494283927"
         }
     },
     rare: {
-        multiplier: 1.25,
+        multiplier: 1.5,
         requiredLevel: 4,
-        percentChance: 15,
+        percentChance: 20,
         emoji: {
             name: "rare_star",
             id: "1251245217378730035"
         }
     },
     epic: {
-        multiplier: 1.5,
+        multiplier: 1.75,
         requiredLevel: 8,
         percentChance: 10,
         emoji: {
@@ -72,7 +72,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         }
     },
     legendary: {
-        multiplier: 1.75,
+        multiplier: 2,
         requiredLevel: 12,
         percentChance: 5,
         emoji: {
@@ -81,7 +81,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         }
     },
     mythic: {
-        multiplier: 2.0,
+        multiplier: 2.5,
         requiredLevel: 15,
         percentChance: 2,
         emoji: {
@@ -92,23 +92,10 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
 };
 
 export function randomRarity(level: number): FishRarity {
-    let max = 0;
-
-    for (const rarity in rarityData) {
-        const { requiredLevel } = rarityData[rarity];
-
-        if (requiredLevel <= level)
-            max += rarityData[rarity].requiredLevel;
-    }
-
-    const random = Math.floor(Math.random() * max);
-
-    for (const rarity in rarityData) {
-        const { percentChance } = rarityData[rarity];
-
-        if (random > percentChance)
-            return rarity as FishRarity;
-    }
-
-    return "common";
+    const rarityList = Object.keys(rarityData) as FishRarity[];
+    const rarity = rarityList.reverse().find(rarity => {
+        const data = rarityData[rarity];
+        return level >= data.requiredLevel && Math.random() * 100 < data.percentChance;
+    });
+    return rarity ?? "common";
 }
