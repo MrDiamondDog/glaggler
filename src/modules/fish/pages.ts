@@ -10,6 +10,8 @@ export function sellFishPage(interaction: ComponentInteraction) {
     const { message, user: { id: userId } } = interaction;
     const { inventory } = fishData[userId];
 
+    interaction.deferUpdate();
+
     if (inventory.length === 0)
         return edit(message.id, message.channelID, {
             content: "you have no fish to sell :(\ngo catch some fish :3",
