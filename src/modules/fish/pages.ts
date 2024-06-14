@@ -21,7 +21,7 @@ export function sellFishPage(interaction: ComponentInteraction) {
 
     const allFish = inventory.map(f => {
         const fish = getFish(f.name)!;
-        return `${fish.emoji || emoji(fish.customEmoji!)} ${emoji(rarityData[f.rarity].emoji)} - ${coins(fish.baseValue)}`;
+        return `${fish.emoji || emoji(fish.customEmoji!)} ${emoji(rarityData[f.rarity].emoji)} - ${coins(f.value)}`;
     }).join("\n");
 
     const totalValue = inventory.reduce((acc, fish) => acc + fish.value, 0);
