@@ -52,7 +52,7 @@ const xpBarEmojis = {
     }
 };
 
-export function xpBar(value: number, max: number, length: number = 7) {
+export function xpBar(value: number, max: number, length: number = 8) {
     let bar = "";
     const percentage = Math.floor(value / max * length);
 
