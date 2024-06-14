@@ -41,7 +41,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         percentChance: 100,
         emoji: {
             name: "common_star",
-            id: "1251245212517400667"
+            id: "1251263297483833435"
         }
     },
     uncommon: {
@@ -50,7 +50,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         percentChance: 50,
         emoji: {
             name: "uncommon_star",
-            id: "1251245218494283927"
+            id: "1251263304404435136"
         }
     },
     rare: {
@@ -59,7 +59,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         percentChance: 25,
         emoji: {
             name: "rare_star",
-            id: "1251245217378730035"
+            id: "1251263335949930650"
         }
     },
     epic: {
@@ -68,7 +68,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         percentChance: 15,
         emoji: {
             name: "epic_star",
-            id: "1251245213083762741"
+            id: "1251263298679083079"
         }
     },
     legendary: {
@@ -77,7 +77,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         percentChance: 7,
         emoji: {
             name: "legendary_star",
-            id: "1251245214471815169"
+            id: "1251263334414684321"
         }
     },
     mythic: {
@@ -86,7 +86,7 @@ export const rarityData: Record<FishRarity, FishRarityData> = {
         percentChance: 3,
         emoji: {
             name: "mythic_star",
-            id: "1251245216133021748"
+            id: "1251263301720215644"
         }
     },
 };
