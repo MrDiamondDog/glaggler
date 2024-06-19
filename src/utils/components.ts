@@ -1,9 +1,9 @@
 import { ButtonStyles, ComponentTypes, MessageActionRow, MessageComponent, NullablePartialEmoji } from "oceanic.js";
 
-export function row(components: MessageComponent[] | MessageComponent): MessageActionRow {
+export function row(...components: MessageComponent[]): MessageActionRow {
     return {
         type: ComponentTypes.ACTION_ROW,
-        components: Array.isArray(components) ? components : [components]
+        components
     };
 }
 

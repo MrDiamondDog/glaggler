@@ -5,10 +5,12 @@
 		"build": "node build.mjs"
 	},
 	"dependencies": {
+		"@discordjs/voice": "^0.17.0",
 		"canvas": "^2.11.2",
 		"dotenv": "^16.4.5",
 		"g4f": "^1.4.3",
-		"oceanic.js": "^1.10.4"
+		"libsodium-wrappers": "^0.7.13",
+		"oceanic.js": "^1.11.0"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "7.7.0",

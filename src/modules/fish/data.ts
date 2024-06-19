@@ -1,9 +1,9 @@
 import fs from "fs";
 
-import { Fish, InventoryFish, PlayerData, randomRarity, rarityData } from "./types";
+import { Fish, InventoryFish, randomRarity, rarityData,UserData } from "./types";
 
-export const fishData: Record<string, PlayerData> = {};
-export const playerSaveDataKeys: Array<keyof PlayerData> = ["inventory", "coins", "inventorySlots", "level", "xp"];
+export const fishData: Record<string, UserData> = {};
+export const playerSaveDataKeys: Array<keyof UserData> = ["inventory", "coins", "inventorySlots", "level", "xp", "collections"];
 
 export function requiredXpForNextLevel(currentLevel: number): number {
     return 5 * Math.pow(currentLevel, 2) + 50 * currentLevel + 100;
@@ -16,6 +16,7 @@ export function addFish(user: string, fish: Fish): { fish: InventoryFish; xp: nu
     inventoryFish.value = Math.ceil(inventoryFish.value * rarityData[inventoryFish.rarity].multiplier);
 
     userData.inventory.push(inventoryFish);
+    userData.collections[fish.name] = (userData.collections[fish.name] || 0) + 1;
 
     const xp = getXpForFish(inventoryFish);
     addXp(user, xp);
@@ -63,35 +64,38 @@ const xpBarEmojis = {
     }
 };
 
-export function xpBar(value: number, max: number, length: number = 8) {
+export function xpBar(user: UserData, length: number = 8) {
     let bar = "";
-    const percentage = Math.floor(value / max * length);
+    const requiredXp = requiredXpForNextLevel(user.level);
+    const percentage = Math.floor(user.xp / requiredXp * length);
 
     for (let i = 0; i < length; i++) {
         if (percentage > i) bar += "1";
         else bar += "0";
     }
 
-    let out = "";
+    let emojiBar = "";
     for (let i = 0; i < length; i++) {
         if (i === 0) {
-            if (bar[i] === "1") out += xpBarEmojis.left.full;
-            else out += xpBarEmojis.left.empty;
+            if (bar[i] === "1") emojiBar += xpBarEmojis.left.full;
+            else emojiBar += xpBarEmojis.left.empty;
             continue;
         }
 
         if (i !== 0 && i !== length - 1) {
-            if (bar[i] === "1") out += xpBarEmojis.middle.full;
-            else out += xpBarEmojis.middle.empty;
+            if (bar[i] === "1") emojiBar += xpBarEmojis.middle.full;
+            else emojiBar += xpBarEmojis.middle.empty;
             continue;
         }
 
         if (i === length - 1) {
-            if (bar[i] === "1") out += xpBarEmojis.right.full;
-            else out += xpBarEmojis.right.empty;
+            if (bar[i] === "1") emojiBar += xpBarEmojis.right.full;
+            else emojiBar += xpBarEmojis.right.empty;
             continue;
         }
     }
+
+    const out = `Level ${user.level} ${emojiBar} ${user.xp}/${requiredXp} XP`;
 
     return out;
 }

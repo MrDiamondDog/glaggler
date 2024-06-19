@@ -5,7 +5,7 @@ import { Glaggler } from "../../client";
 import { emoji, stripIndent } from "../../utils";
 import { row } from "../../utils/components";
 import { sellFishButton,startFishButton } from "./buttons";
-import { addFish, fishData, requiredXpForNextLevel, sellAll, xpBar } from "./data";
+import { addFish, fishData, sellAll, xpBar } from "./data";
 import { coins } from "./fishes";
 import { fishingPage, sellFishPage } from "./pages";
 import { rarityData } from "./types";
@@ -36,7 +36,8 @@ const buttonActions: Record<string, (interaction: ComponentInteraction) => void>
     "sellall": interaction => {
         const total = sellAll(interaction.user.id);
         interaction.editParent({
-            content: `sold all fish for ${coins(total)}\nyou now have ${coins(fishData[interaction.user.id].coins)}`,
+            content: stripIndent`sold all fish for ${coins(total)}
+            you now have ${coins(fishData[interaction.user.id].coins)}`,
             components: [row(startFishButton(interaction.user.id, "Go Fishing"))]
         });
     }
@@ -81,8 +82,8 @@ Glaggler.on("interactionCreate", async int => {
         return interaction.editParent({
             content: stripIndent`
             you caught a ${catching.emoji || emoji(catching.customEmoji!)} **${catching.name}** ${emoji(rarityData[addedFishData.fish.rarity].emoji)}!
-            $${addedFishData.fish.value}, +${addedFishData.xp} XP
-            Level ${userData.level} ${xpBar(userData.xp, requiredXpForNextLevel(userData.level))} ${userData.xp}/${requiredXpForNextLevel(userData.level)} XP`,
+            +${addedFishData.xp} XP
+            ${xpBar(userData)}`,
             components: [row(startFishButton(userId, "Fish Again")), row(sellFishButton(userId))]
         });
     } else {

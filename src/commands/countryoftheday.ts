@@ -266,7 +266,6 @@ defineCommand({
     aliases: ["cotd"],
 
     async execute(msg) {
-        // use current day as seed
         const today = new Date();
         const seed = today.getFullYear() + today.getMonth() + today.getDate();
         const random = seededRandom(seed);

@@ -13,18 +13,19 @@ export type InventoryFish = {
     rarity: FishRarity;
 }
 
-export type PlayerData = {
-    state: PlayerState;
+export type UserData = {
+    state: UserState;
     catching?: Fish;
     coins: number;
     inventorySlots: number;
     inventory: InventoryFish[];
     level: number;
     xp: number;
+    collections: Record<string, number>;
 }
 
 
-export type PlayerState = "waiting" | "catching" | "idle";
+export type UserState = "waiting" | "catching" | "idle";
 export type FishRarity = "common" | "uncommon" | "rare" | "epic" | "legendary" | "mythic";
 
 export type FishRarityData = {

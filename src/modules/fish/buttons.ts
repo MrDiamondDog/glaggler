@@ -24,7 +24,7 @@ export function catchFishButtonRows(user: string, rows: number, cols: number, fi
             buttons.push(catchFishButton(user, index, index === fishIndex ? fish : undefined));
         }
 
-        components.push(row(buttons));
+        components.push(row(...buttons));
     }
 
     return components;

@@ -122,3 +122,11 @@ export function seededRandom(seed: number) {
     state = (a * state + c) % m;
     return state / (m - 1);
 }
+
+export function secondsToTime(s: number) {
+    const hours = Math.floor(s / 3600);
+    const minutes = Math.floor((s % 3600) / 60);
+    const seconds = Math.floor(s % 60);
+
+    return `${hours ? hours + ":" : ""}${minutes}:${String(seconds).padStart(2, "0")}`;
+}

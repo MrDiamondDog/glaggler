@@ -1,11 +1,24 @@
 import { ComponentInteraction } from "oceanic.js";
 
-import { edit, emoji, sleep } from "../../utils";
+import { edit, emoji, sleep, stripIndent } from "../../utils";
 import { button, row } from "../../utils/components";
 import { catchFishButtonRows, sellFishButton, startFishButton } from "./buttons";
-import { fishData } from "./data";
+import { fishData, xpBar } from "./data";
 import { coins, getFish, randomFish } from "./fishes";
 import { rarityData } from "./types";
+
+export function profilePage(interaction: ComponentInteraction) {
+    const { message, user: { id: userId } } = interaction;
+    const userData = fishData[userId];
+
+    interaction.deferUpdate();
+
+    return edit(message.id, message.channelID, {
+        content: stripIndent`${interaction.user.mention} - ${coins(userData.coins)}
+        ${xpBar(userData)}`,
+        components: [row(startFishButton(userId), sellFishButton(userId))]
+    });
+}
 
 export function sellFishPage(interaction: ComponentInteraction) {
     const { message, user: { id: userId } } = interaction;
@@ -36,13 +49,13 @@ export function sellFishPage(interaction: ComponentInteraction) {
 
 export async function fishingPage(interaction: ComponentInteraction) {
     const { message, user: { id: userId } } = interaction;
-    const playerData = fishData[userId];
+    const userData = fishData[userId];
 
     interaction.deferUpdate();
 
-    if (playerData.state !== "idle") return;
+    if (userData.state !== "idle") return;
 
-    if (playerData.inventory.length >= playerData.inventorySlots) {
+    if (userData.inventory.length >= userData.inventorySlots) {
         return await edit(message.id, message.channelID, {
             content: "you have no inventory slots :(\ngo sell some fish :3",
             components: [row(sellFishButton(userId))]
@@ -53,32 +66,32 @@ export async function fishingPage(interaction: ComponentInteraction) {
     const cols = 3;
 
     const fishMsg = await edit(message.id, message.channelID, {
-        content: `waiting for fish :3\n${playerData.inventory.length}/${playerData.inventorySlots} inventory slots`,
+        content: `waiting for fish :3\n${userData.inventory.length}/${userData.inventorySlots} inventory slots`,
         components: catchFishButtonRows(userId, rows, cols)
     });
 
     const fishToCatch = randomFish();
     const fishIndex = Math.floor(Math.random() * 9);
 
-    playerData.catching = fishToCatch;
+    userData.catching = fishToCatch;
 
-    playerData.state = "waiting";
+    userData.state = "waiting";
     await sleep(Math.floor(Math.random() * 10000));
 
-    playerData.state = "catching";
+    userData.state = "catching";
     await edit(fishMsg.id, fishMsg.channelID, {
         components: catchFishButtonRows(userId, rows, cols, fishToCatch, fishIndex)
     });
 
     await sleep(1500);
 
-    if (playerData.state !== "catching") return;
+    if (userData.state !== "catching") return;
 
-    playerData.state = "idle";
+    userData.state = "idle";
     await edit(fishMsg.id, fishMsg.channelID, {
         content: "you missed the fish :(",
         components: [row(startFishButton(userId, "Fish Again"))]
     });
 
-    playerData.catching = undefined;
+    userData.catching = undefined;
 }
