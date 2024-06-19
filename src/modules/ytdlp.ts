@@ -1,6 +1,5 @@
 import { exec, execSync } from "child_process";
 import fs from "fs";
-import path from "path";
 
 // eslint-disable-next-line
 export const ytUrlRe = /^(?:(?:https?:)?\/\/)?(?:(?:(?:www|m(?:usic)?)\.)?youtu(?:\.be|be\.com)\/(?:shorts\/|live\/|v\/|e(?:mbed)?\/|watch(?:\/|\?(?:\S+=\S+&)*v=)|oembed\?url=https?%3A\/\/(?:www|m(?:usic)?)\.youtube\.com\/watch\?(?:\S+=\S+&)*v%3D|attribution_link\?(?:\S+=\S+&)*u=(?:\/|%2F)watch(?:\?|%3F)v(?:=|%3D))?|www\.youtube-nocookie\.com\/embed\/)([\w-]{11})[\?&#]?\S*$/;
@@ -10,7 +9,13 @@ export function getVideoId(url: string) {
 }
 
 export function installYTDLP() {
-    if (fs.readdirSync(path.resolve(__dirname, "../")).join(" ").includes("ytdlp")) {
+    if (process.platform === "linux") {
+        if (fs.existsSync("/usr/bin/ytdlp")) {
+            console.log("ytdlp already installed");
+            return;
+        }
+    }
+    if (fs.readdirSync("./").join(" ").includes("ytdlp")) {
         console.log("ytdlp already installed");
         return;
     }
@@ -23,7 +28,8 @@ export function installYTDLP() {
     const windowsURL = `https://github.com/yt-dlp/yt-dlp/releases/download/${version}/yt-dlp_x86.exe`;
 
     if (process.platform === "linux") {
-        execSync(`curl -L ${linuxURL} -o ytdlp ytdlp && chmod a+rx ytdlp`);
+        execSync(`curl -L ${linuxURL} -o ytdlp ytdlp && chmod +x ytdlp`);
+        console.log("move ytdlp to /usr/bin");
     } else if (process.platform === "win32") {
         execSync(`curl -L ${windowsURL} -o ytdlp.exe`);
     } else if (process.platform === "darwin") {
