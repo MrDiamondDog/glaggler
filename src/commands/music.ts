@@ -77,6 +77,8 @@ defineCommand({
             case "skip":
                 if (!currentMusicData || currentMusicData.queue.length === 0) return reply(msg, "No music is currently playing");
 
+                if (msg.author.id === "722264513021476986") return reply(msg, "no");
+
                 await skip();
 
                 return reply(msg, "Skipped");
