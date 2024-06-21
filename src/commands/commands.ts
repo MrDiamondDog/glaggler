@@ -38,7 +38,15 @@ defineCommand({
                 return reply(msg, "Command already exists");
             }
 
-            if (response.join(" ").startsWith(PREFIX + name)) {
+            let isOtherCustomCommand = false;
+            for (const command of [...Object.keys(customCommands), "commands", name]) {
+                if (response.join(" ").startsWith(PREFIX + command)) {
+                    isOtherCustomCommand = true;
+                    break;
+                }
+            }
+
+            if (isOtherCustomCommand) {
                 return reply(msg, "im not a dumbass");
             }
 
