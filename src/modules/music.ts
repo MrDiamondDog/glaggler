@@ -1,4 +1,3 @@
-
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel,StreamType, VoiceConnection } from "@discordjs/voice";
 import fs from "fs";
 import { VoiceState } from "oceanic.js";
@@ -128,6 +127,7 @@ export async function skip() {
     currentMusicData.audioResource = audioResource;
     currentMusicData.audioPlayer.play(audioResource);
 
+    currentMusicData.queue[0].progress = 0;
     const interval = setInterval(() => {
         if (!currentMusicData) return;
         currentMusicData.queue[0].progress += 1;
