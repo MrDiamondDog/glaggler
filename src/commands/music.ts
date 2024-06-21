@@ -56,9 +56,9 @@ defineCommand({
                 const currentSong = currentMusicData.queue[0];
 
                 let queueMsg = stripIndent`
-                ${currentSong.title} (${currentSong.timeStr})
-                ${secondsToTime(currentSong.progress)} ${progressBar(currentSong.progress, currentSong.seconds, 10)} ${currentSong.timeStr}`;
-                queueMsg += "\n\n" + currentMusicData.queue.map((info, i) => `${i + 1}. [${info.title}](${info.url}) (${info.timeStr})`).join("\n");
+                ${currentSong.title} (${secondsToTime(currentSong.seconds)})
+                ${secondsToTime(currentSong.progress)} ${progressBar(currentSong.progress, currentSong.seconds, 10)} ${secondsToTime(currentSong.seconds)}`;
+                queueMsg += "\n\n" + currentMusicData.queue.map((info, i) => `${i + 1}. [${info.title}](${info.url}) (${secondsToTime(info.seconds)})`).join("\n");
 
                 return reply(msg, { content: queueMsg, flags: MessageFlags.SUPPRESS_EMBEDS });
             case "pause":

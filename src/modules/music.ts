@@ -1,14 +1,11 @@
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel,StreamType, VoiceConnection } from "@discordjs/voice";
-import fs from "fs";
 import { VoiceState } from "oceanic.js";
 import yts from "yt-search";
+import ytdl from "ytdl-core";
 
-import { secondsToTime } from "./../utils";
-import { getVideoId, ytdlp } from "./ytdlp";
 
 type VideoInfo = {
     title: string;
-    timeStr: string;
     seconds: number;
     progress: number;
     url: string;
@@ -24,28 +21,19 @@ type MusicData = {
 
 export let currentMusicData: MusicData | undefined = undefined;
 
-async function getVideoInfo(url: string): Promise<VideoInfo> {
-    const id = getVideoId(url);
-    await ytdlp("--skip-download", "--write-info-json", `https://www.youtube.com/watch?v=${id}`);
-
-    const rawData = JSON.parse(fs.readFileSync(`videos/${id}/${id}.info.json`, "utf-8"));
-
+function toVideoInfo(info: ytdl.videoInfo): VideoInfo {
     return {
-        title: rawData.title,
-        timeStr: secondsToTime(rawData.duration),
-        seconds: rawData.duration,
+        title: info.videoDetails.title,
+        seconds: parseInt(info.videoDetails.lengthSeconds),
         progress: 0,
-        url: `https://youtube.com/watch?v=${id}`
+        url: info.videoDetails.video_url
     };
 }
 
-async function downloadYT(url: string) {
-    const id = getVideoId(url);
+async function getVideoInfo(url: string): Promise<VideoInfo> {
+    const info = await ytdl.getInfo(url);
 
-    await ytdlp(`https://youtube.com/watch?v=${id} -f bestaudio`);
-
-    const file = fs.readdirSync(`videos/${id}`).find(file => !file.endsWith("json"));
-    return fs.createReadStream(`videos/${id}/${file}`);
+    return toVideoInfo(info);
 }
 
 export async function youtubeSearch(query: string): Promise<string | undefined> {
@@ -72,10 +60,15 @@ export async function play(voiceState: VoiceState, url: string): Promise<VideoIn
     voiceConnection.subscribe(audioPlayer);
     voiceConnection.on("error", error => console.error(error));
 
-    const video = await downloadYT(url);
-    const info = await getVideoInfo(url);
+    const rawInfo = await ytdl.getInfo(url);
+    const info = toVideoInfo(rawInfo);
 
-    const audioResource = createAudioResource(video, {
+    const audioResource = createAudioResource(ytdl.downloadFromInfo(rawInfo, {
+        filter: "audioonly",
+        quality: "highestaudio",
+        dlChunkSize: 0,
+        highWaterMark: 1 << 25
+    }), {
         silencePaddingFrames: 5,
         inputType: StreamType.Arbitrary
     });
@@ -119,9 +112,14 @@ export async function skip() {
 
     if (!currentMusicData.queue?.[0]) return stop();
 
-    const video = await downloadYT(currentMusicData.queue[0].url);
+    const info = await ytdl.getInfo(currentMusicData.queue[0].url);
 
-    const audioResource = createAudioResource(video, {
+    const audioResource = createAudioResource(ytdl.downloadFromInfo(info, {
+        filter: "audioonly",
+        quality: "highestaudio",
+        dlChunkSize: 0,
+        highWaterMark: 1 << 25
+    }), {
         silencePaddingFrames: 5,
         inputType: StreamType.Arbitrary
     });
