@@ -36,8 +36,7 @@ const buttonActions: Record<string, (interaction: ComponentInteraction) => void>
     "sellall": interaction => {
         const total = sellAll(interaction.user.id);
         interaction.editParent({
-            content: stripIndent`sold all fish for ${coins(total)}
-            you now have ${coins(fishData[interaction.user.id].coins)}`,
+            content: `sold all fish for ${coins(total)}\nyou now have ${coins(fishData[interaction.user.id].coins)}`,
             components: [row(startFishButton(interaction.user.id, "Go Fishing"))]
         });
     }

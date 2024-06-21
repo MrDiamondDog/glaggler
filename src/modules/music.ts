@@ -10,6 +10,8 @@ import { getVideoId, ytdlp } from "./ytdlp";
 type VideoInfo = {
     title: string;
     timeStr: string;
+    seconds: number;
+    progress: number;
     url: string;
 }
 
@@ -17,6 +19,7 @@ type MusicData = {
     voiceConnection?: VoiceConnection;
     audioResource?: AudioResource;
     audioPlayer?: AudioPlayer;
+    progressInterval?: NodeJS.Timeout;
     queue: VideoInfo[];
 }
 
@@ -31,6 +34,8 @@ async function getVideoInfo(url: string): Promise<VideoInfo> {
     return {
         title: rawData.title,
         timeStr: secondsToTime(rawData.duration),
+        seconds: rawData.duration,
+        progress: 0,
         url: `https://youtube.com/watch?v=${id}`
     };
 }
@@ -74,17 +79,25 @@ export async function play(voiceState: VoiceState, url: string): Promise<VideoIn
         inputType: StreamType.Arbitrary
     });
 
+    audioPlayer.play(audioResource);
+
+    const interval = setInterval(() => {
+        info.progress += 1;
+    }, 1000);
+
     currentMusicData = {
         voiceConnection,
         audioPlayer,
         audioResource,
+        progressInterval: interval,
         queue: [info]
     };
 
-    audioPlayer.play(audioResource);
-
     audioPlayer
-        .on(AudioPlayerStatus.Idle, () => skip())
+        .on(AudioPlayerStatus.Idle, () => {
+            if (currentlySkipping) return;
+            skip();
+        })
         .on("error", error => {
             console.error(error);
             skip();
@@ -93,9 +106,13 @@ export async function play(voiceState: VoiceState, url: string): Promise<VideoIn
     return info;
 }
 
+let currentlySkipping = false;
 export async function skip() {
     if (!currentMusicData || !currentMusicData.audioPlayer) return;
 
+    currentlySkipping = true;
+
+    clearInterval(currentMusicData.progressInterval!);
     currentMusicData.audioPlayer.stop();
     currentMusicData.queue.shift();
 
@@ -110,11 +127,21 @@ export async function skip() {
 
     currentMusicData.audioResource = audioResource;
     currentMusicData.audioPlayer.play(audioResource);
+
+    const interval = setInterval(() => {
+        if (!currentMusicData) return;
+        currentMusicData.queue[0].progress += 1;
+    }, 1000);
+
+    currentMusicData.progressInterval = interval;
+
+    currentlySkipping = false;
 }
 
 export function stop() {
     if (!currentMusicData || !currentMusicData.voiceConnection) return;
 
+    clearInterval(currentMusicData.progressInterval!);
     currentMusicData.voiceConnection.destroy();
     currentMusicData = undefined;
 }

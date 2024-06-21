@@ -3,14 +3,16 @@ import { MessageFlags } from "oceanic.js";
 
 import { Glaggler } from "../client";
 import { defineCommand } from "../command";
-import { currentMusicData, play, stop, youtubeSearch } from "../modules/music";
-import { edit, reply } from "../utils";
+import { currentMusicData, play, skip, stop, youtubeSearch } from "../modules/music";
+import { edit, reply, stripIndent } from "../utils";
+import { progressBar } from "../utils/progressBar";
+import { secondsToTime } from "./../utils";
 
 defineCommand({
     name: "music",
     description: "Music controls",
 
-    usage: "music <play|stop|queue|pause|resume> [query|url]",
+    usage: "music <play|stop|queue|pause|resume|skip> [query|url]",
 
     async execute(msg, ...args) {
         if (!args.length) return reply(msg, "Please provide a subcommand (play, stop, skip, queue, pause, resume, loop)");
@@ -51,7 +53,12 @@ defineCommand({
             case "queue":
                 if (!currentMusicData || currentMusicData.queue.length === 0) return reply(msg, "No music is currently playing");
 
-                const queueMsg = currentMusicData.queue.map((info, i) => `${i + 1}. [${info.title}](${info.url}) (${info.timeStr})`).join("\n");
+                const currentSong = currentMusicData.queue[0];
+
+                let queueMsg = stripIndent`
+                ${currentSong.title} (${currentSong.timeStr})
+                ${secondsToTime(currentSong.progress)} ${progressBar(currentSong.progress, currentSong.seconds, 10)} ${currentSong.timeStr}`;
+                queueMsg += "\n\n" + currentMusicData.queue.map((info, i) => `${i + 1}. [${info.title}](${info.url}) (${info.timeStr})`).join("\n");
 
                 return reply(msg, { content: queueMsg, flags: MessageFlags.SUPPRESS_EMBEDS });
             case "pause":
@@ -67,6 +74,12 @@ defineCommand({
 
                 if (!unpaused) return reply(msg, "Player is not paused");
                 return reply(msg, "Resumed");
+            case "skip":
+                if (!currentMusicData || currentMusicData.queue.length === 0) return reply(msg, "No music is currently playing");
+
+                await skip();
+
+                return reply(msg, "Skipped");
             default:
                 return reply(msg, "Invalid subcommand");
         }

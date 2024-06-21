@@ -1,5 +1,6 @@
 import fs from "fs";
 
+import { progressBar } from "../../utils/progressBar";
 import { Fish, InventoryFish, randomRarity, rarityData,UserData } from "./types";
 
 export const fishData: Record<string, UserData> = {};
@@ -49,53 +50,10 @@ export function getXpForFish(fish: InventoryFish): number {
     return Math.min(xp, 30);
 }
 
-const xpBarEmojis = {
-    left: {
-        full: "<:bar_left_full:1251265391011823777>",
-        empty: "<:bar_left_empty:1251265389946736731>"
-    },
-    middle: {
-        full: "<:bar_middle_full:1251266233483923609>",
-        empty: "<:bar_middle_empty:1251265393016705096>"
-    },
-    right: {
-        full: "<:bar_right_full:1251265397051756584>",
-        empty: "<:bar_right_empty:1251265395923619970>"
-    }
-};
-
 export function xpBar(user: UserData, length: number = 8) {
-    let bar = "";
     const requiredXp = requiredXpForNextLevel(user.level);
-    const percentage = Math.floor(user.xp / requiredXp * length);
 
-    for (let i = 0; i < length; i++) {
-        if (percentage > i) bar += "1";
-        else bar += "0";
-    }
-
-    let emojiBar = "";
-    for (let i = 0; i < length; i++) {
-        if (i === 0) {
-            if (bar[i] === "1") emojiBar += xpBarEmojis.left.full;
-            else emojiBar += xpBarEmojis.left.empty;
-            continue;
-        }
-
-        if (i !== 0 && i !== length - 1) {
-            if (bar[i] === "1") emojiBar += xpBarEmojis.middle.full;
-            else emojiBar += xpBarEmojis.middle.empty;
-            continue;
-        }
-
-        if (i === length - 1) {
-            if (bar[i] === "1") emojiBar += xpBarEmojis.right.full;
-            else emojiBar += xpBarEmojis.right.empty;
-            continue;
-        }
-    }
-
-    const out = `Level ${user.level} ${emojiBar} ${user.xp}/${requiredXp} XP`;
+    const out = `Level ${user.level} ${progressBar(user.xp, requiredXp)} ${user.xp}/${requiredXp} XP`;
 
     return out;
 }
