@@ -42,9 +42,6 @@ async function getVideoInfo(url: string): Promise<VideoInfo> {
 async function downloadYT(url: string) {
     const id = getVideoId(url);
 
-    if (fs.existsSync(`videos/${id}`))
-        return fs.createReadStream(`videos/${id}/${fs.readdirSync(`videos/${id}`).find(file => !file.endsWith("json"))!}`);
-
     await ytdlp(`https://youtube.com/watch?v=${id} -f bestaudio`);
 
     const file = fs.readdirSync(`videos/${id}`).find(file => !file.endsWith("json"));
