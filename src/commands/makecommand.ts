@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { Command, defineCommand } from "../command";
+import { Command, Commands, defineCommand } from "../command";
 import { reply } from "../utils";
 
 const customCommands: Record<string, string> = {};
@@ -30,6 +30,10 @@ defineCommand({
     async execute(msg, name, ...response) {
         if (!name) return reply(msg, "Please provide a name for the command");
         if (!response.length) return reply(msg, "Please provide a response for the command");
+
+        if (customCommands[name] || Commands[name]) {
+            return reply(msg, "Command already exists");
+        }
 
         const command = {
             name,

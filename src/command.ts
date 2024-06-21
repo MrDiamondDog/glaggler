@@ -5,6 +5,7 @@ export interface Command {
     aliases?: string[];
     description: string;
     usage?: string;
+    ownerOnly?: boolean;
     execute(message: Message, ...args: string[]): Promise<any> | any;
 }
 

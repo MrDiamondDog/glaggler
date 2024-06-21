@@ -8,11 +8,9 @@ defineCommand({
     name: "update",
     description: "Update the bot",
     usage: "update [install]",
+    ownerOnly: true,
 
     async execute(msg, install) {
-        if (msg.author.id !== "523338295644782592")
-            return reply(msg, "You are not allowed to run this command.");
-
         try {
             const gitOut = execSync("git pull").toString();
             if (gitOut.includes("Already up to date."))

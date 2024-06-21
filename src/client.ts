@@ -50,6 +50,10 @@ Glaggler.on("messageCreate", async message => {
     if (!message.channel)
         await message.client.rest.channels.get(message.channelID);
 
+    if (cmd.ownerOnly && message.author.id !== "523338295644782592") {
+        return reply(message, "You are not allowed to use this command");
+    }
+
     try {
         console.log("Running", cmd.name, "with args", args);
         await cmd.execute(message as Message<AnyTextableChannel>, ...args);
