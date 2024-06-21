@@ -30,10 +30,10 @@ Glaggler.once("ready", async () => {
         }
     ]);
 
-    if (fs.existsSync("./data/assets/restart-notif-channel")) {
-        const channelID = fs.readFileSync("./data/assets/restart-notif-channel", "utf8");
-        fs.rmSync("./data/assets/restart-notif-channel");
-        send(channelID, "im back :3");
+    if (fs.existsSync("./data/assets/restart-data.json")) {
+        const restartData = JSON.parse(fs.readFileSync("./data/assets/restart-data.json", "utf8"));
+        fs.rmSync("./data/assets/restart-data.json");
+        send(restartData.channelID, `im back :3${restartData.files ? `\n\`${restartData.files}\`` : ""}`);
     }
 });
 
