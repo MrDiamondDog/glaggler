@@ -38,7 +38,7 @@ Glaggler.once("ready", async () => {
 });
 
 Glaggler.on("messageCreate", async message => {
-    if (message.author.id === Glaggler.user.id || !message.content.startsWith(PREFIX)) return;
+    if (!message.content.startsWith(PREFIX)) return;
 
     const content = message.content.slice(PREFIX.length).trim();
     const args = content.split(" ");

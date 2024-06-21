@@ -11,6 +11,7 @@ import { secondsToTime } from "./../utils";
 defineCommand({
     name: "music",
     description: "Music controls",
+    aliases: ["m"],
 
     usage: "music <play|stop|queue|pause|resume|skip> [query|url]",
 

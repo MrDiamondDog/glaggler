@@ -11,14 +11,14 @@ import { fishingPage, sellFishPage } from "./pages";
 import { rarityData } from "./types";
 
 
-if (fs.existsSync("fishData.json")) {
-    Object.assign(fishData, JSON.parse(fs.readFileSync("fishData.json", "utf8")));
+if (fs.existsSync("./data/fishData.json")) {
+    Object.assign(fishData, JSON.parse(fs.readFileSync("./data/fishData.json", "utf8")));
     Object.keys(fishData).forEach(id => {
         if (!fishData[id].state) fishData[id].state = "idle";
     });
 } else {
     Object.assign(fishData, {});
-    fs.writeFileSync("fishData.json", "{}");
+    fs.writeFileSync("./data/fishData.json", "{}");
 }
 
 

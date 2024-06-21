@@ -10,14 +10,14 @@ export function setCurrentConvo(user: string | null) {
 }
 
 export function cacheMessages(messages: string[]) {
-    if (!fs.existsSync("messages.json"))
-        fs.writeFileSync("messages.json", "[]");
+    if (!fs.existsSync("./data/messages.json"))
+        fs.writeFileSync("./data/messages.json", "[]");
 
-    fs.writeFileSync("messages.json", JSON.stringify(messages));
+    fs.writeFileSync("./data/messages.json", JSON.stringify(messages));
 }
 
 export function getMessages() {
-    return JSON.parse(fs.readFileSync("messages.json", "utf8")) as string[];
+    return JSON.parse(fs.readFileSync("./data/messages.json", "utf8")) as string[];
 }
 
 Glaggler.on("messageCreate", async msg => {

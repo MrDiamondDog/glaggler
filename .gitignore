@@ -1,8 +1,5 @@
 .env
 node_modules
 dist
-messages.json
-fishData.json
-ytdlp.exe
-ytdlp
-videos
+data
+!data/assets
