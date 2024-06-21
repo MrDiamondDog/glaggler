@@ -2,6 +2,7 @@
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel,StreamType, VoiceConnection } from "@discordjs/voice";
 import fs from "fs";
 import { VoiceState } from "oceanic.js";
+import yts from "yt-search";
 
 import { secondsToTime } from "./../utils";
 import { getVideoId, ytdlp } from "./ytdlp";
@@ -39,6 +40,11 @@ async function downloadYT(url: string) {
     await ytdlp(`https://youtube.com/watch?v=${id} -f bestaudio`);
     const file = fs.readdirSync(`videos/${id}`).find(file => !file.endsWith("json"));
     return fs.createReadStream(`videos/${id}/${file}`);
+}
+
+export async function youtubeSearch(query: string): Promise<string | undefined> {
+    const search = await yts(query);
+    return search.videos?.[0]?.url;
 }
 
 export async function play(voiceState: VoiceState, url: string): Promise<VideoInfo & { queued?: boolean }> {

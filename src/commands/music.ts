@@ -3,7 +3,7 @@ import { MessageFlags } from "oceanic.js";
 
 import { Glaggler } from "../client";
 import { defineCommand } from "../command";
-import { currentMusicData, play, stop } from "../modules/music";
+import { currentMusicData, play, stop, youtubeSearch } from "../modules/music";
 import { edit, reply } from "../utils";
 
 defineCommand({
@@ -26,10 +26,21 @@ defineCommand({
         switch (subcommand) {
             case "play":
                 if (!args[1]) return reply(msg, "Please provide a query or URL");
-
                 const botMsg = await reply(msg, { content: "Downloading...", flags: MessageFlags.SUPPRESS_EMBEDS });
 
-                const info = await play(msg.member!.voiceState!, args[1]);
+                let url = args[1];
+
+                if (!args[1].startsWith("http")) {
+                    edit(botMsg.id, botMsg.channelID, "Searching...");
+
+                    const searchedUrl = await youtubeSearch(args.slice(1).join(" "));
+                    if (!searchedUrl) return reply(msg, "No results found");
+                    url = searchedUrl;
+                }
+
+                edit(botMsg.id, botMsg.channelID, "Downloading...");
+
+                const info = await play(msg.member!.voiceState!, url);
 
                 if (info.queued) return edit(botMsg.id, botMsg.channelID, `[${info.title}](${info.url}) Queued`);
                 else return edit(botMsg.id, botMsg.channelID, `Now Playing: [${info.title}](${info.url})`);
@@ -38,7 +49,7 @@ defineCommand({
 
                 return stop();
             case "queue":
-                if (!currentMusicData) return reply(msg, "No music is currently playing");
+                if (!currentMusicData || currentMusicData.queue.length === 0) return reply(msg, "No music is currently playing");
 
                 const queueMsg = currentMusicData.queue.map((info, i) => `${i + 1}. [${info.title}](${info.url}) (${info.timeStr})`).join("\n");
 
