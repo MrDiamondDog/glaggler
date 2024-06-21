@@ -3,7 +3,7 @@ import { MessageFlags } from "oceanic.js";
 
 import { Glaggler } from "../client";
 import { defineCommand } from "../command";
-import { currentMusicData, play, skip, stop, youtubeSearch } from "../modules/music";
+import { currentMusicData, play, skip, spotifyRe, stop, youtubeRe, youtubeSearch } from "../modules/music";
 import { edit, reply, stripIndent } from "../utils";
 import { progressBar } from "../utils/progressBar";
 import { secondsToTime } from "./../utils";
@@ -38,6 +38,8 @@ defineCommand({
                     const searchedUrl = await youtubeSearch(args.slice(1).join(" "));
                     if (!searchedUrl) return reply(msg, "No results found");
                     url = searchedUrl;
+                } else {
+                    if (!youtubeRe.test(url) && !spotifyRe.test(url)) return reply(msg, "Invalid URL. Only YouTube and Spotify URLs are supported. Playlists are only supported by YouTube URLs.");
                 }
 
                 edit(botMsg.id, botMsg.channelID, "Downloading...");

@@ -6,6 +6,7 @@
 	},
 	"dependencies": {
 		"@discordjs/voice": "^0.17.0",
+		"@spotify/web-api-ts-sdk": "^1.2.0",
 		"canvas": "^2.11.2",
 		"dotenv": "^16.4.5",
 		"g4f": "^1.4.3",

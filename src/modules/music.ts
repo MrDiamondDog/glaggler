@@ -1,8 +1,12 @@
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel,StreamType, VoiceConnection } from "@discordjs/voice";
+import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import { VoiceState } from "oceanic.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 
+const Spotify = SpotifyApi.withClientCredentials(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!);
+export const spotifyRe = /(https?:\/\/open.spotify.com\/(track)\/([a-zA-Z0-9]+))/;
+export const youtubeRe = /(https?:\/\/(?:www\.)?((?:youtu\.be\/.{4,16})|(youtube\.com\/watch\?v=.{4,16})))/gim;
 
 type VideoInfo = {
     title: string;
@@ -42,6 +46,20 @@ export async function youtubeSearch(query: string): Promise<string | undefined> 
 }
 
 export async function play(voiceState: VoiceState, url: string): Promise<VideoInfo & { queued?: boolean }> {
+    if (spotifyRe.test(url)) {
+        const spotifyURL = url?.match(spotifyRe);
+        const trackID = spotifyURL?.[3];
+
+        if (!trackID) throw "Invalid Spotify URL";
+
+        const track = await Spotify.tracks.get(trackID);
+        const youtubeUrl = await youtubeSearch(`${track.artists.map(a => a.name).join(", ")} - ${track.name}`);
+
+        if (!youtubeUrl) throw "No results found";
+
+        url = youtubeUrl;
+    }
+
     if (currentMusicData) {
         const info = await getVideoInfo(url);
         currentMusicData.queue.push(info);
