@@ -10,10 +10,10 @@ export const Glaggler = new Client({
     auth: "Bot " + process.env.DISCORD_TOKEN,
     gateway: { intents: ["ALL"] },
     allowedMentions: {
-        everyone: false,
-        repliedUser: false,
-        roles: false,
-        users: false
+        everyone: true,
+        repliedUser: true,
+        roles: true,
+        users: true
     }
 });
 
