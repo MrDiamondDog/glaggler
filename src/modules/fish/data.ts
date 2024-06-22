@@ -17,6 +17,7 @@ export function addFish(user: string, fish: Fish): { fish: InventoryFish; xp: nu
     inventoryFish.value = Math.ceil(inventoryFish.value * rarityData[inventoryFish.rarity].multiplier);
 
     userData.inventory.push(inventoryFish);
+    if (!userData.collections) userData.collections = {};
     userData.collections[fish.name] = (userData.collections[fish.name] || 0) + 1;
 
     const xp = getXpForFish(inventoryFish);
@@ -79,5 +80,5 @@ export function saveFishData() {
         }
     }
 
-    fs.writeFileSync("fishData.json", JSON.stringify(saveData, null, 4));
+    fs.writeFileSync("data/fishData.json", JSON.stringify(saveData, null, 4));
 }
