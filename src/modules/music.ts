@@ -1,8 +1,9 @@
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel,StreamType, VoiceConnection } from "@discordjs/voice";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
-import { VoiceState } from "oceanic.js";
+import { VoiceChannel, VoiceState } from "oceanic.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
+
 
 const Spotify = SpotifyApi.withClientCredentials(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!);
 export const spotifyRe = /(https?:\/\/open.spotify.com\/(track)\/([a-zA-Z0-9]+))/;
@@ -78,8 +79,11 @@ export async function play(voiceState: VoiceState, url: string): Promise<VideoIn
     voiceConnection.subscribe(audioPlayer);
     voiceConnection.on("error", error => console.error(error));
 
+
     const rawInfo = await ytdl.getInfo(url);
     const info = toVideoInfo(rawInfo);
+
+    (voiceState.channel as VoiceChannel).setStatus(`:notes: ${info.title}`);
 
     const audioResource = createAudioResource(ytdl.downloadFromInfo(rawInfo, {
         filter: "audioonly",
