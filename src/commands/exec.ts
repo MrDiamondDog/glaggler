@@ -6,13 +6,10 @@ import { codeblock, reply } from "./../utils";
 defineCommand({
     name: "exec",
     description: "run js code (please dont fuck up my computer)",
-
+    ownerOnly: true,
     usage: "exec <js codeblock>",
 
     async execute(msg, ...args) {
-        if (msg.author.id !== "523338295644782592")
-            return reply(msg, "https://http.cat/403.jpg");
-
         const console: any = {
             _lines: [] as string[],
             _log(...things: string[]) {

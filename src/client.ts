@@ -43,7 +43,7 @@ Glaggler.on("messageCreate", async message => {
     const content = message.content.slice(PREFIX.length).trim();
     const args = content.split(" ");
 
-    const cmdName = args.shift()?.toLowerCase()!;
+    const cmdName = args.shift()!;
     const cmd = Commands[cmdName];
     if (!cmd) return;
 
