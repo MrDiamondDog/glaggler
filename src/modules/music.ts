@@ -4,6 +4,8 @@ import { VoiceChannel, VoiceState } from "oceanic.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 
+import { Glaggler } from "../client";
+
 
 const Spotify = SpotifyApi.withClientCredentials(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!);
 export const spotifyRe = /(https?:\/\/open.spotify.com\/(track)\/([a-zA-Z0-9]+))/;
@@ -79,7 +81,6 @@ export async function play(voiceState: VoiceState, url: string): Promise<VideoIn
     voiceConnection.subscribe(audioPlayer);
     voiceConnection.on("error", error => console.error(error));
 
-
     const rawInfo = await ytdl.getInfo(url);
     const info = toVideoInfo(rawInfo);
 
@@ -135,6 +136,8 @@ export async function skip() {
     if (!currentMusicData.queue?.[0]) return stop();
 
     const info = await ytdl.getInfo(currentMusicData.queue[0].url);
+
+    (Glaggler.getChannel(currentMusicData.voiceConnection!.joinConfig.channelId!) as VoiceChannel).setStatus(`:notes: ${currentMusicData.queue[0].title}`);
 
     const audioResource = createAudioResource(ytdl.downloadFromInfo(info, {
         filter: "audioonly",
