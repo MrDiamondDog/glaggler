@@ -133,6 +133,8 @@ export async function skip() {
     currentMusicData.audioPlayer.stop();
     currentMusicData.queue.shift();
 
+    (Glaggler.getChannel(currentMusicData.voiceConnection!.joinConfig.channelId!) as VoiceChannel).setStatus("");
+
     if (!currentMusicData.queue?.[0]) return stop();
 
     const info = await ytdl.getInfo(currentMusicData.queue[0].url);
