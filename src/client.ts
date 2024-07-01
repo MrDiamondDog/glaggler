@@ -25,7 +25,7 @@ Glaggler.once("ready", async () => {
     Glaggler.editStatus("online", [
         {
             name: "custom",
-            state: "gay fish box",
+            state: "straight fish box",
             type: ActivityTypes.CUSTOM
         }
     ]);
