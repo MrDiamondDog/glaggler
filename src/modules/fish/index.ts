@@ -5,20 +5,20 @@ import { Glaggler } from "../../client";
 import { emoji, stripIndent } from "../../utils";
 import { row } from "../../utils/components";
 import { sellFishButton,startFishButton } from "./buttons";
-import { addFish, fishData, sellAll, xpBar } from "./data";
+import { addFish, fishStore, sellAll, xpBar } from "./data";
 import { coins } from "./fishes";
 import { fishingPage, sellFishPage } from "./pages";
 import { rarityData } from "./types";
 
 
-if (fs.existsSync("./data/fishData.json")) {
-    Object.assign(fishData, JSON.parse(fs.readFileSync("./data/fishData.json", "utf8")));
-    Object.keys(fishData).forEach(id => {
-        if (!fishData[id].state) fishData[id].state = "idle";
+if (fs.existsSync("./data/fish.json")) {
+    fishStore.data = JSON.parse(fs.readFileSync("./data/fish.json", "utf8"));
+    Object.keys(fishStore.data).forEach(id => {
+        if (!fishStore.data[id].state) fishStore.data[id].state = "idle";
     });
 } else {
-    Object.assign(fishData, {});
-    fs.writeFileSync("./data/fishData.json", "{}");
+    fishStore.data = {};
+    fs.writeFileSync("./data/fish.json", "{}");
 }
 
 
@@ -36,7 +36,7 @@ const buttonActions: Record<string, (interaction: ComponentInteraction) => void>
     "sellall": interaction => {
         const total = sellAll(interaction.user.id);
         interaction.editParent({
-            content: `sold all fish for ${coins(total)}\nyou now have ${coins(fishData[interaction.user.id].coins)}`,
+            content: `sold all fish for ${coins(total)}\nyou now have ${coins(fishStore.data[interaction.user.id].coins)}`,
             components: [row(startFishButton(interaction.user.id, "Go Fishing"))]
         });
     }
@@ -69,7 +69,7 @@ Glaggler.on("interactionCreate", async int => {
 
     const userId = interaction.user.id;
     const index = interaction.data.customID.split("-")[0].split("_")[1];
-    const userData = fishData[userId];
+    const userData = fishStore.data[userId];
 
     const { catching } = userData;
 

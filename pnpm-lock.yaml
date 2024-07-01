@@ -36,6 +36,9 @@ importers:
         specifier: ^4.11.5
         version: 4.11.5
     devDependencies:
+      '@types/yt-search':
+        specifier: ^2.10.3
+        version: 2.10.3
       '@typescript-eslint/eslint-plugin':
         specifier: 7.7.0
         version: 7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.56.0)(typescript@5.4.5))(eslint@8.56.0)(typescript@5.4.5)
@@ -280,6 +283,9 @@ packages:
 
   '@types/ws@8.5.10':
     resolution: {integrity: sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==}
+
+  '@types/yt-search@2.10.3':
+    resolution: {integrity: sha512-kH4Yzs/edH9/s/Wj58WhV73qpiRedWeNy5V202BqpXPd+xUFM8M3ASLdUMYUbzzlUDoGorDm4JpeN6iNx3sOjw==}
 
   '@typescript-eslint/eslint-plugin@7.7.0':
     resolution: {integrity: sha512-GJWR0YnfrKnsRoluVO3PRb9r5aMZriiMMM/RHj5nnTrBy1/wIgk76XCtCKcnXGjpZQJQRFtGV9/0JJ6n30uwpQ==}
@@ -2157,6 +2163,8 @@ snapshots:
   '@types/ws@8.5.10':
     dependencies:
       '@types/node': 20.14.0
+
+  '@types/yt-search@2.10.3': {}
 
   '@typescript-eslint/eslint-plugin@7.7.0(@typescript-eslint/parser@7.7.0(eslint@8.56.0)(typescript@5.4.5))(eslint@8.56.0)(typescript@5.4.5)':
     dependencies:

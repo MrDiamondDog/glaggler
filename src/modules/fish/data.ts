@@ -1,9 +1,10 @@
 import fs from "fs";
 
 import { progressBar } from "../../utils/progressBar";
+import { createStore } from "../dataStore";
 import { Fish, InventoryFish, randomRarity, rarityData,UserData } from "./types";
 
-export const fishData: Record<string, UserData> = {};
+export const fishStore = createStore<Record<string, UserData>>("fish");
 export const playerSaveDataKeys: Array<keyof UserData> = ["inventory", "coins", "inventorySlots", "level", "xp", "collections"];
 
 export function requiredXpForNextLevel(currentLevel: number): number {
@@ -11,7 +12,7 @@ export function requiredXpForNextLevel(currentLevel: number): number {
 }
 
 export function addFish(user: string, fish: Fish): { fish: InventoryFish; xp: number; } {
-    const userData = fishData[user];
+    const userData = fishStore.data[user];
 
     const inventoryFish: InventoryFish = { name: fish.name, value: fish.baseValue, rarity: randomRarity(userData.level) };
     inventoryFish.value = Math.ceil(inventoryFish.value * rarityData[inventoryFish.rarity].multiplier);
@@ -29,7 +30,7 @@ export function addFish(user: string, fish: Fish): { fish: InventoryFish; xp: nu
 }
 
 export function addXp(user: string, xp: number) {
-    const userData = fishData[user];
+    const userData = fishStore.data[user];
 
     userData.xp += xp;
 
@@ -60,10 +61,10 @@ export function xpBar(user: UserData, length: number = 8) {
 }
 
 export function sellAll(user: string): number {
-    const total = fishData[user].inventory.reduce((acc, fish) => acc + fish.value, 0);
+    const total = fishStore.data[user].inventory.reduce((acc, fish) => acc + fish.value, 0);
 
-    fishData[user].coins += total;
-    fishData[user].inventory = [];
+    fishStore.data[user].coins += total;
+    fishStore.data[user].inventory = [];
 
     saveFishData();
 
@@ -73,10 +74,10 @@ export function sellAll(user: string): number {
 export function saveFishData() {
     const saveData: Record<string, any> = {};
 
-    for (const key in fishData) {
+    for (const key in fishStore.data) {
         for (const saveKey of playerSaveDataKeys) {
             if (!saveData[key]) saveData[key] = {};
-            saveData[key][saveKey] = fishData[key][saveKey];
+            saveData[key][saveKey] = fishStore.data[key][saveKey];
         }
     }
 

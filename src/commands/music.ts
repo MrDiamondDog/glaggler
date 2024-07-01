@@ -3,7 +3,7 @@ import { MessageFlags } from "oceanic.js";
 
 import { Glaggler } from "../client";
 import { defineCommand } from "../command";
-import { currentMusicData, play, skip, spotifyRe, stop, youtubeRe, youtubeSearch } from "../modules/music";
+import { currentMusicData, play, playFile, skip, spotifyRe, stop, youtubeRe, youtubeSearch } from "../modules/music";
 import { edit, reply, stripIndent } from "../utils";
 import { progressBar } from "../utils/progressBar";
 import { secondsToTime } from "./../utils";
@@ -85,6 +85,8 @@ defineCommand({
                 await skip();
 
                 return reply(msg, "Skipped");
+            case "count":
+                return playFile(msg.member!.voiceState!, "data/assets/Ten.mp3");
             default:
                 return reply(msg, "Invalid subcommand");
         }

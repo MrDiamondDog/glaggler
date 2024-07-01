@@ -1,5 +1,6 @@
 import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, joinVoiceChannel,StreamType, VoiceConnection } from "@discordjs/voice";
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
+import fs from "fs";
 import { VoiceChannel, VoiceState } from "oceanic.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
@@ -121,6 +122,37 @@ export async function play(voiceState: VoiceState, url: string): Promise<VideoIn
         });
 
     return info;
+}
+
+export async function playFile(voiceState: VoiceState, path: string) {
+    if (currentMusicData) return;
+
+    const audioPlayer = createAudioPlayer();
+    const voiceConnection = joinVoiceChannel({
+        adapterCreator: voiceState.guild.voiceAdapterCreator,
+        channelId: voiceState.channelID!,
+        guildId: voiceState.guildID,
+        selfDeaf: true
+    });
+    voiceConnection.subscribe(audioPlayer);
+    voiceConnection.on("error", error => console.error(error));
+
+    const audioResource = createAudioResource(fs.createReadStream(path), {
+        silencePaddingFrames: 5,
+        inputType: StreamType.Arbitrary
+    });
+
+    audioPlayer.play(audioResource);
+
+    audioPlayer
+        .on(AudioPlayerStatus.Idle, () => {
+            console.log("idle");
+            audioPlayer.stop();
+        })
+        .on("error", error => {
+            console.error(error);
+            audioPlayer.stop();
+        });
 }
 
 let currentlySkipping = false;

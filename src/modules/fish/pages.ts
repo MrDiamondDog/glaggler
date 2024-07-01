@@ -3,13 +3,13 @@ import { ComponentInteraction } from "oceanic.js";
 import { edit, emoji, sleep, stripIndent } from "../../utils";
 import { button, row } from "../../utils/components";
 import { catchFishButtonRows, sellFishButton, startFishButton } from "./buttons";
-import { fishData, xpBar } from "./data";
+import { fishStore, xpBar } from "./data";
 import { coins, getFish, randomFish } from "./fishes";
 import { rarityData } from "./types";
 
 export function profilePage(interaction: ComponentInteraction) {
     const { message, user: { id: userId } } = interaction;
-    const userData = fishData[userId];
+    const userData = fishStore.data[userId];
 
     interaction.deferUpdate();
 
@@ -22,7 +22,7 @@ export function profilePage(interaction: ComponentInteraction) {
 
 export function sellFishPage(interaction: ComponentInteraction) {
     const { message, user: { id: userId } } = interaction;
-    const { inventory } = fishData[userId];
+    const { inventory } = fishStore.data[userId];
 
     interaction.deferUpdate();
 
@@ -49,7 +49,7 @@ export function sellFishPage(interaction: ComponentInteraction) {
 
 export async function fishingPage(interaction: ComponentInteraction) {
     const { message, user: { id: userId } } = interaction;
-    const userData = fishData[userId];
+    const userData = fishStore.data[userId];
 
     interaction.deferUpdate();
 
