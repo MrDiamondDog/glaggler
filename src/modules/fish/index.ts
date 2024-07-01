@@ -31,9 +31,9 @@ function notYourFish(interaction: ComponentInteraction) {
 
 
 const buttonActions: Record<string, (interaction: ComponentInteraction) => void> = {
-    "startfish": fishingPage,
-    "sellfish": sellFishPage,
-    "sellall": interaction => {
+    "fish-startfish": fishingPage,
+    "fish-sellfish": sellFishPage,
+    "fish-sellall": interaction => {
         const total = sellAll(interaction.user.id);
         interaction.editParent({
             content: `sold all fish for ${coins(total)}\nyou now have ${coins(fishStore.data[interaction.user.id].coins)}`,
@@ -44,7 +44,7 @@ const buttonActions: Record<string, (interaction: ComponentInteraction) => void>
 
 function executeButtonActions(interaction: ComponentInteraction) {
     const buttonId = interaction.data.customID;
-    const [action, userId] = buttonId.split("-");
+    const [_, action, userId] = buttonId.split("-");
     const executor = interaction.user.id;
 
     if (userId !== executor)
@@ -63,9 +63,9 @@ Glaggler.on("interactionCreate", async int => {
 
     const interaction = int as ComponentInteraction;
 
-    executeButtonActions(interaction);
-
     if (!interaction.data.customID.startsWith("fish")) return;
+
+    executeButtonActions(interaction);
 
     const userId = interaction.user.id;
     const index = interaction.data.customID.split("-")[0].split("_")[1];

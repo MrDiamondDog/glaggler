@@ -31,9 +31,9 @@ export function catchFishButtonRows(user: string, rows: number, cols: number, fi
 }
 
 export function startFishButton(user: string, text: string = "Start Fishing"): MessageComponent {
-    return button("startfish-" + user, text, ButtonStyles.PRIMARY);
+    return button("fish-startfish-" + user, text, ButtonStyles.PRIMARY);
 }
 
 export function sellFishButton(user: string): MessageComponent {
-    return button("sellfish-" + user, "Sell Fish", ButtonStyles.SECONDARY);
+    return button("fish-sellfish-" + user, "Sell Fish", ButtonStyles.SECONDARY);
 }

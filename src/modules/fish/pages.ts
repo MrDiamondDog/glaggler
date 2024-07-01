@@ -43,7 +43,7 @@ export function sellFishPage(interaction: ComponentInteraction) {
 
     return edit(message.id, message.channelID, {
         content: out,
-        components: [row(button("sellall-" + userId, "Sell All"))]
+        components: [row(button("fish-sellall-" + userId, "Sell All"))]
     });
 }
 
