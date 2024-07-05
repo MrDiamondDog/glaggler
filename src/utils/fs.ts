@@ -13,7 +13,10 @@ export function unzip(path: string, filename: string) {
     if (!fs.existsSync(`data/unzipped/${filename}`))
         fs.mkdirSync(`data/unzipped/${filename}`);
 
-    return execSync(`cd data/unzipped/${filename} && tar -xf "../../${path}"`);
+    if (process.platform === "win32")
+        return execSync(`cd data/unzipped/${filename} && tar -xf "../../${path}"`);
+    else
+        return execSync(`cd data/unzipped/${filename} && unzip "../../${path}"`);
 }
 
 /**
