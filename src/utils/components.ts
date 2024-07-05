@@ -7,12 +7,13 @@ export function row(...components: MessageComponent[]): MessageActionRow {
     };
 }
 
-export function button(customID: string, label: string, style: number = ButtonStyles.PRIMARY, emoji?: NullablePartialEmoji): MessageComponent {
+export function button(customID: string, label: string, style: number = ButtonStyles.PRIMARY, disabled?: boolean, emoji?: NullablePartialEmoji): MessageComponent {
     return {
         type: ComponentTypes.BUTTON,
         style,
         emoji,
         customID,
-        label
+        label,
+        disabled
     };
 }
