@@ -52,7 +52,7 @@ export function getXpForFish(fish: InventoryFish): number {
     return Math.min(xp, 30);
 }
 
-export function xpBar(user: UserData, length: number = 8) {
+export function xpBar(user: UserData) {
     const requiredXp = requiredXpForNextLevel(user.level);
 
     const out = `Level ${user.level} ${progressBar(user.xp, requiredXp)} ${user.xp}/${requiredXp} XP`;

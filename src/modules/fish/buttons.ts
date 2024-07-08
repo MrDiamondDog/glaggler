@@ -9,6 +9,7 @@ export function catchFishButton(user: string, index: number, fish?: Fish): Messa
         `fish_${index}${fish ? "!" : ""}-${user}`,
         `${ZWSP}`,
         ButtonStyles.SECONDARY,
+        false,
         fish ? fish.customEmoji || { name: fish.emoji } : undefined
     );
 }
