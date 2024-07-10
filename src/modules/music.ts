@@ -7,7 +7,6 @@ import ytdl from "ytdl-core";
 
 import { Glaggler } from "../client";
 
-
 const Spotify = SpotifyApi.withClientCredentials(process.env.SPOTIFY_CLIENT_ID!, process.env.SPOTIFY_CLIENT_SECRET!);
 export const spotifyRe = /(https?:\/\/open.spotify.com\/(track)\/([a-zA-Z0-9]+))/;
 export const youtubeRe = /(https?:\/\/(?:www\.)?((?:youtu\.be\/.{4,16})|(youtube\.com\/watch\?v=.{4,16})))/gim;

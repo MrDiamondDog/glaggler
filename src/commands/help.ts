@@ -4,7 +4,7 @@ import { reply, ZWSP } from "../utils";
 
 defineCommand({
     name: "help",
-    aliases: ["h", "?"],
+    aliases: ["shelp", "theylp", "h", "?"],
     description: "List all commands",
     usage: "help [command]",
 
