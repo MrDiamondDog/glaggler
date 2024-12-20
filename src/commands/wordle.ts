@@ -41,9 +41,6 @@ defineCommand({
             if (guess.length !== game.word.length)
                 return reply(msg, "wrong length");
 
-            if (!words.includes(guess))
-                return reply(msg, "word not found");
-
             let out = "";
             const correctLetters: string[] = " ".repeat(game.word.length).split("");
             for (let i = 0; i < game.word.length; i++) {
